@@ -3,6 +3,7 @@ import time, random
 from qiskit import *
 import numpy as np
 
+notes = [["C"], ["C#", "Db"], ["D"], ["Eb", "D#"], ["E"], ["F"], ["F#", "Gb"], ["G"], ["G#", "Ab"], ["A"], ["Bb", "A#"], ["B"]]
 
 num_qubits = 5
 circ = QuantumCircuit(num_qubits, num_qubits)
@@ -25,8 +26,6 @@ def quantum_dice(randomizer):
     while num > randomizer:
         num = random_num()
     return num
-
-notes = [["C"], ["C#", "Db"], ["D"], ["Eb", "D#"], ["E"], ["F"], ["F#", "Gb"], ["G"], ["G#", "Ab"], ["A"], ["Bb", "A#"], ["B"]]
 
 def noteToMidi(note, octave):
     jump = 12
