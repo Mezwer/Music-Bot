@@ -2,6 +2,8 @@ import pygame.midi
 import time, random
 from qiskit import *
 import numpy as np
+from mido import Message, MidiFile, MidiTrack, MetaMessage
+import mido
 
 notes = [["C"], ["C#", "Db"], ["D"], ["Eb", "D#"], ["E"], ["F"], ["F#", "Gb"], ["G"], ["G#", "Ab"], ["A"], ["Bb", "A#"], ["B"]]
 
@@ -94,18 +96,29 @@ def noteLength(noteL):
 
         i.append(length)
 
-print(minorScale("C#"))
-test = stringNote(40, "C#", 4, minorScale("C#"))
+test = stringNote(40, "Bb", 4, majorScale("Bb"))
 noteLength(test)
+
+INSTRUMENT = 46
 
 pygame.midi.init()
 player = pygame.midi.Output(0)
-player.set_instrument(85) # 46, 49, 51, 78, 32, 33
+player.set_instrument(INSTRUMENT) # 46, 49, 51, 78, 32, 33, 85
+
+mid = MidiFile()
+track = MidiTrack()
+mid.tracks.append(track)
+track.append(Message('program_change', program=INSTRUMENT, time=0))
+track.append(MetaMessage('set_tempo', tempo=200000))
 
 for i in test:
-    player.note_on(noteToMidi(i[0], i[1]), 127)
+    midiNote = noteToMidi(i[0], i[1])
+    track.append(Message('note_on', note=midiNote, velocity=127, time=int(mido.second2tick(second=i[2], ticks_per_beat=480, tempo=200000))))
+    player.note_on(midiNote, 127)
     time.sleep(i[2])
-    player.note_off(noteToMidi(i[0], i[1]), 127)
+    player.note_off(midiNote, 127)
+
+mid.save('new_song.mid')
 
 time.sleep(.5)
 del player
