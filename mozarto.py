@@ -1,7 +1,6 @@
 import pygame.midi
-import time, random
+import time
 from qiskit import *
-import numpy as np
 from mido import Message, MidiFile, MidiTrack, MetaMessage
 import mido
 
